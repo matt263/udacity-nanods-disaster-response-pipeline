@@ -39,12 +39,12 @@ model = pickle.load(open('./models/model.pkl', 'rb'))
 @app.route('/index')
 def index():
 
-    print('Here')
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
     df_categories = df.drop(columns=['id', 'message', 'original', 'genre'])
-    category_names = df_categories.columns
-    category_counts = df.sum(axis=0).to_list()
+    category_names = list(df_categories.columns)
+    category_counts = list(df_categories.sum(axis=0))
+    genre_counts = df.groupby('genre').count()['message']
+    genre_names = list(genre_counts.index)
 
     # create visuals
     graphs = [
@@ -62,8 +62,28 @@ def index():
                     'title': "Count"
                 },
                 'xaxis': {
-                    'title': "Category"
-                }
+                    'title': "Category",
+                    'automargin': True
+                },
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=genre_names,
+                    y=genre_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Message Genres',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Genre",
+                    'automargin': True
+                },
             }
         }
     ]
