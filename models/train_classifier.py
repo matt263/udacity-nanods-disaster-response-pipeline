@@ -95,9 +95,9 @@ def build_model():
 
     # create grid search object and train
     parameters = {
-        # 'vect__max_df': (0.25, 0.5, 0.75),
-        # 'vect__ngram_range': [(1, 1), (1, 2)],
-        # 'clf__estimator__alpha': [1e-5, 1e-4, 1e-3],
+        'vect__max_df': (0.25, 0.5, 0.75),
+        'vect__ngram_range': [(1, 1), (1, 2)],
+        'clf__estimator__alpha': [1e-5, 1e-4, 1e-3],
     }
     model = GridSearchCV(pipeline, parameters, verbose=2)
 
