@@ -1,0 +1,1 @@
+py .\models\train_classifier.py .\data\messages.db .\models\model.pkl

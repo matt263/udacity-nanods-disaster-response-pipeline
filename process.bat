@@ -1,0 +1,1 @@
+py .\data\process_data.py .\data\messages.csv .\data\categories.csv .\data\messages.db
