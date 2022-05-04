@@ -4,10 +4,6 @@ Udacity data science nano degree - disaster response pipeline project
 ## Summary
 This project uses disaster data from Appen (formally Figure 8) to build a model for an API that classifies disaster messages. An ETL pipeline is used to combine data and prepare it for training of a classifier. The classifier is deployed in a web app where messages can be entered to be classified.
 
-## Web app
-The web app displays some statistics on the training data and provides an interface for classification of messages. The screenshot is shown below.
- ![Image of web app](/images/web_app.png)
-
 ## Detail
 
 **ETL Pipeline**
@@ -29,6 +25,9 @@ The file `train_model.py` runs the ML pipeline. The pipeline:
 The web app is run by the file `run.py`. The web app:
 - Displays some statistics on data
 - Provides interface to classify messages
+- A screenshot of the web app is shown below
+
+![Image of web app](/images/web_app.png)
 
 ## Files
 
@@ -51,4 +50,11 @@ The main dependencies of this project as as follows:
 - plotly
 - scikit-learn
 - SQLAlchemy
-A full list of requirements is in *requirements.txt*. This project does not use Anaconda.
+A full list of requirements is in *requirements.txt*. NB this project does not use Anaconda.
+
+## Instructions
+Ensure all requirements are installed then run the scripts, from the project directory, as follows:
+1. `pip install -r requirements.txt`
+2. `py .\data\process_data.py .\data\messages.csv .\data\categories.csv .\data\messages.db`
+3. `py .\models\train_classifier.py .\data\messages.db .\models\model.pkl`
+4. `py .\app\run.py`
