@@ -19,7 +19,7 @@ def load_data(messages_filepath, categories_filepath):
     # Load messages dataset
     messages = pd.read_csv(messages_filepath, encoding='utf-8')
 
-    # Load categoroies dataset
+    # Load categories dataset
     categories = pd.read_csv(categories_filepath, encoding='utf-8')
 
     # Merge datasets
@@ -62,7 +62,7 @@ def clean_data(df):
     # Some related have value 2 (what does this mean?) - replace 2 with 1.
     categories = categories.replace(2, 1)
 
-    # drop the original categories column from `df`
+    # Drop the original categories column from `df`
     df.drop(columns=['categories'], inplace=True)
 
     # concatenate the original dataframe with the new `categories` dataframe

@@ -32,7 +32,7 @@ def load_data(database_filepath):
     Y       Dataframe of categories
     category_names List of categories
     '''
-    # load data from database
+    # Load data from database
     engine = create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql("SELECT * FROM messages", engine)
 
@@ -64,14 +64,14 @@ def tokenize(text):
     # Remove stop words
     tokens = [tok for tok in tokens if tok not in stop_words]
 
-    # initiate lemmatizer
+    # Initiate lemmatizer
     lemmatizer = WordNetLemmatizer()
 
-    # iterate through each token
+    # Iterate through each token
     clean_tokens = []
     for tok in tokens:
 
-        # lemmatize and remove leading/trailing white space
+        # Lemmatize and remove leading/trailing white space
         clean_tok = lemmatizer.lemmatize(tok.strip())
         clean_tokens.append(clean_tok)
 
@@ -85,7 +85,6 @@ def build_model():
     '''
 
     # Optimise SGDClassifier
-
     pipeline = Pipeline([
 
         ('vect', TfidfVectorizer(tokenizer=None)),
@@ -93,7 +92,7 @@ def build_model():
 
     ])
 
-    # create grid search object and train
+    # Create grid search object and train
     parameters = {
         'vect__max_df': (0.25, 0.5, 0.75),
         'vect__ngram_range': [(1, 1), (1, 2)],
@@ -132,7 +131,7 @@ def report(Y_test, Y_pred):
         f1.append(report['weighted avg']['f1-score'])
         support.append(report['weighted avg']['support'])
 
-    # Print the averages for everything
+    # Print the averages of the mean weighted averages
     print('Means of weighted averages:')
     print(
         f'Precision: {np.array(precision).mean()}\n'
@@ -156,7 +155,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
     Y_pred = model.predict(X_test)
     Y_pred_df = pd.DataFrame(Y_pred, columns=category_names)
 
-    # Show results
+    # Display results
     report(Y_test, Y_pred_df)
 
 
