@@ -50,6 +50,7 @@ The main dependencies of this project as as follows:
 - plotly
 - scikit-learn
 - SQLAlchemy
+
 A full list of requirements is in *requirements.txt*. NB this project does not use Anaconda.
 
 ## Instructions
