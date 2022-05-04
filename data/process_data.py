@@ -78,9 +78,7 @@ def clean_data(df):
     no_data_names = list(no_data[no_data].index)
     print('The following categories have no data and will be removed:'
           f'\n{no_data_names}')
-
-    # Remove categories
-    df.drop(columns=list(no_data[no_data_names].index))
+    df = df.drop(columns=list(no_data[no_data_names].index))
 
     return df
 

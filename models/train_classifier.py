@@ -16,13 +16,14 @@ from sklearn.metrics import classification_report
 
 
 nltk.download(['stopwords'])
-# 'punkt', 'wordnet', 'omw-1.4', 
+stop_words = set(stopwords.words('english'))
+
 
 def load_data(database_filepath):
     '''
     load_data
     Load data from sqlite database.
-    
+
     Input:
     database_filepath   Filepath to database
 
@@ -40,9 +41,6 @@ def load_data(database_filepath):
     Y = df.drop(columns=['id', 'message', 'original', 'genre'])
     category_names = Y.columns
 
-    # Remove child_alone as there is no data
-    Y = Y.drop(columns=['child_alone'])
-
     return X, Y, category_names
 
 
@@ -50,10 +48,10 @@ def tokenize(text):
     '''
     tokenize
     Convert text to clean tokens.
-    
+
     Input:
     text        Text to be tokenized
-    
+
     Returns:
     clean_tokens    List of tokens
     '''
@@ -62,9 +60,8 @@ def tokenize(text):
 
     # tokenize text
     tokens = word_tokenize(text)
-    
+
     # Remove stop words
-    stop_words = set(stopwords.words('english'))
     tokens = [tok for tok in tokens if tok not in stop_words]
 
     # initiate lemmatizer
@@ -73,7 +70,7 @@ def tokenize(text):
     # iterate through each token
     clean_tokens = []
     for tok in tokens:
-        
+
         # lemmatize and remove leading/trailing white space
         clean_tok = lemmatizer.lemmatize(tok.strip())
         clean_tokens.append(clean_tok)
@@ -91,8 +88,8 @@ def build_model():
 
     pipeline = Pipeline([
 
-        ('vect', TfidfVectorizer(tokenizer=tokenize)),
-        ('clf', MultiOutputClassifier(SGDClassifier(n_jobs=1)))
+        ('vect', TfidfVectorizer(tokenizer=None)),
+        ('clf', MultiOutputClassifier(SGDClassifier(n_jobs=-1)))
 
     ])
 
@@ -104,14 +101,14 @@ def build_model():
     }
     model = GridSearchCV(pipeline, parameters, verbose=2)
 
-    return model    
+    return model
 
 
 def report(Y_test, Y_pred):
     '''
     report
     Prints classification report for each category and mean values.
-    
+
     Input:
     Y_test  Actual values
     Y_pred  Predicted values
@@ -121,13 +118,15 @@ def report(Y_test, Y_pred):
     f1 = []
     support = []
     for col in Y_test:
-        
+
         # Print full report for category
-        report_str = classification_report(Y_test[col], Y_pred[col], zero_division=0)
+        report_str = classification_report(
+            Y_test[col], Y_pred[col], zero_division=0)
         print(f'Class: {col}:\n{report_str}')
 
         # Store average values
-        report = classification_report(Y_test[col], Y_pred[col], zero_division=0, output_dict=True)
+        report = classification_report(
+            Y_test[col], Y_pred[col], zero_division=0, output_dict=True)
         precision.append(report['weighted avg']['precision'])
         recall.append(report['weighted avg']['recall'])
         f1.append(report['weighted avg']['f1-score'])
@@ -136,8 +135,8 @@ def report(Y_test, Y_pred):
     # Print the averages for everything
     print('Means of weighted averages:')
     print(
-        f'Precision: {np.array(precision).mean()}\n'\
-        f'Recall: {np.array(recall).mean()}\n'\
+        f'Precision: {np.array(precision).mean()}\n'
+        f'Recall: {np.array(recall).mean()}\n'
         f'f1-score: {np.array(f1).mean()}'
     )
 
@@ -158,7 +157,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
     Y_pred_df = pd.DataFrame(Y_pred, columns=category_names)
 
     # Show results
-    report(Y_test, Y_pred)
+    report(Y_test, Y_pred_df)
 
 
 def save_model(model, model_filepath):
@@ -173,14 +172,15 @@ def main():
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, category_names = load_data(database_filepath)
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
-        
+        X_train, X_test, Y_train, Y_test = train_test_split(
+            X, Y, test_size=0.2)
+
         print('Building model...')
         model = build_model()
-        
+
         print('Training model...')
         model.fit(X_train, Y_train)
-        
+
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
 
@@ -190,9 +190,9 @@ def main():
         print('Trained model saved!')
 
     else:
-        print('Please provide the filepath of the disaster messages database '\
-              'as the first argument and the filepath of the pickle file to '\
-              'save the model to as the second argument. \n\nExample: python '\
+        print('Please provide the filepath of the disaster messages database '
+              'as the first argument and the filepath of the pickle file to '
+              'save the model to as the second argument. \n\nExample: python '
               'train_classifier.py ../data/DisasterResponse.db classifier.pkl')
 
 
