@@ -25,7 +25,8 @@ The file `train_model.py` runs the ML pipeline. The pipeline:
 - Outputs test scores for the model
 - Saves model as a pickle file
 
-**Webapp**
+**Web app**
+The web app is run by the file `run.py`. The web app:
 - Displays some statistics on data
 - Provides interface to classify messages
 
